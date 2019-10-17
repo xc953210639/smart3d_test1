@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Use correct character set. -->
+  <meta charset="utf-8">
+  <!-- Tell IE to use the latest, best version. -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- Make the application on mobile take up the full browser screen and disable user scaling. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <title>Hello World!</title>
+  <script src="../Build/Cesium/Cesium.js"></script>
+  <style>
+      @import url(../Build/Cesium/Widgets/widgets.css);
+      html, body, #cesiumContainer {
+          width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+      }
+  </style>
+</head>
+<body>
+  <div id="cesiumContainer"></div>
+  <script>
+    var viewer = new Cesium.Viewer('cesiumContainer');
+
+    // 测试1
+    // var scene = viewer.scene;
+    // var modelMatrix = Cesium.Transforms.eastNorthUpToFixedFrame(
+    //     Cesium.Cartesian3.fromDegrees(-75.62898254394531, 40.02804946899414, 0.0));
+    //     var model = scene.primitives.add(Cesium.Model.fromGltf({
+    //         url : '../Apps/SampleData/models/CesiumBalloon/CesiumBalloon.glb',
+    //         modelMatrix : modelMatrix,
+    //         scale : 200.0
+
+
+    //     }));
+    // viewer.extend(Cesium.viewerCesiumInspectorMixin);
+
+
+    // 测试2
+    // Load the NYC buildings tileset
+    var city = viewer.scene.primitives.add(new Cesium.Cesium3DTileset({ uri: Cesium.IonResource.fromAssetId(3839) 
+    }));
+
+    // Adjust the tileset height so its not floating above terrain
+  	var heightOffset = -32;
+  	city.readyPromise.then(function(tileset) {
+  	    // Position tileset
+  	    var boundingSphere = tileset.boundingSphere;
+  	    var cartographic = Cesium.Cartographic.fromCartesian(boundingSphere.center);
+  	    var surface = Cesium.Cartesian3.fromRadians(cartographic.longitude, cartographic.latitude, 0.0);
+  	    var offset = Cesium.Cartesian3.fromRadians(cartographic.longitude, cartographic.latitude, heightOffset);
+  	    var translation = Cesium.Cartesian3.subtract(offset, surface, new Cesium.Cartesian3());
+  	    tileset.modelMatrix = Cesium.Matrix4.fromTranslation(translation);
+  	});
+  	var defaultStyle = new Cesium.Cesium3DTileStyle({
+  		    color : "color('white')",
+  		    show : true,
+  		});
+
+    //镜头飞到给定的经纬度
+    // viewer.scene.camera.flyTo({destination: Cesium.Cartesian3.fromDegrees(117.2201578, 34.35905207, 1000)});
+  </script>
+</body>
+</html>
+
+
+
+
+ 

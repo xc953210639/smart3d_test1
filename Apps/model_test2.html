@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Use correct character set. -->
+  <meta charset="utf-8">
+  <!-- Tell IE to use the latest, best version. -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- Make the application on mobile take up the full browser screen and disable user scaling. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <title>Hello World!</title>
+  <script src="../Build/Cesium/Cesium.js"></script>
+  <style>
+      @import url(../Build/Cesium/Widgets/widgets.css);
+      html, body, #cesiumContainer {
+          width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+      }
+  </style>
+  <script src="changeHeight.js"></script>
+</head>
+<body>
+  <div id="cesiumContainer"></div>
+  <script>
+    var viewer = new Cesium.Viewer('cesiumContainer');
+
+    //加载倾斜摄影
+    var tileset = new Cesium.Cesium3DTileset({
+    //相对路径
+      name:'FLEURAC',
+      url: '../Apps/data_2/tileset.json',
+      maximumScreenSpaceError: 2,        //最大的屏幕空间误差
+      maximumNumberOfLoadedTiles: 2000,  //最大加载瓦片个数
+      // modelMatrix: m //形状矩阵
+    });
+    //添加到球体上
+    viewer.scene.primitives.add(tileset);
+    //定位过去
+    viewer.zoomTo(tileset);
+    //调用获取高度的方法
+    tileset.readyPromise.then(zoomToTileset);
+    getPosition();
+    getHeight();
+    // viewer.scene.camera.flyTo({destination: Cesium.Cartesian3.fromDegrees(117.2201578, 34.35905207, 1000)});
+  </script>
+</body>
+</html>
